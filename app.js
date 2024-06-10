@@ -19,13 +19,11 @@ const arrows = [
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     circles.forEach((circle, index) => {
-     
         ctx.beginPath();
         ctx.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI);
         ctx.fillStyle = circle.color;
         ctx.fill();
         ctx.closePath();
-
 
         const arrow = arrows[index];
         ctx.beginPath();
@@ -37,7 +35,6 @@ function draw() {
         ctx.fill();
     });
 }
-
 
 function update() {
     arrows.forEach((arrow, index) => {
@@ -51,13 +48,11 @@ function update() {
     });
 }
 
-
 function isInsideCircle(circle, x, y) {
     const dx = x - circle.x;
     const dy = y - circle.y;
     return dx * dx + dy * dy <= circle.radius * circle.radius;
 }
-
 
 canvas.addEventListener('click', (event) => {
     const rect = canvas.getBoundingClientRect();
@@ -70,6 +65,18 @@ canvas.addEventListener('click', (event) => {
     });
 });
 
+canvas.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    let hovering = false;
+    circles.forEach(circle => {
+        if (isInsideCircle(circle, x, y)) {
+            hovering = true;
+        }
+    });
+    canvas.style.cursor = hovering ? 'pointer' : 'default';
+});
 
 resetBtn.addEventListener('click', () => {
     arrows.forEach(arrow => arrow.x = 700);
@@ -78,13 +85,11 @@ resetBtn.addEventListener('click', () => {
     draw();
 });
 
-
 function animate() {
     update();
     draw();
     requestAnimationFrame(animate);
 }
-
 
 draw();
 animate();
